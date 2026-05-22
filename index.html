@@ -2,7 +2,7 @@
 <html lang="nl">
   <head>
     <!-- Vereiste meta tags -->
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="./manifest.json" />
     <meta name="theme-color" content="#56ff56" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -106,7 +106,7 @@
       const MDCTooltip = mdc.tooltip.MDCTooltip;
       const MDCTopAppBar = mdc.topAppBar.MDCTopAppBar;
       if ("serviceWorker" in navigator && !navigator.serviceWorker.controller) {
-        navigator.serviceWorker.register("/sw.js").then(function (reg) {
+        navigator.serviceWorker.register("./sw.js").then(function (reg) {
           console.log("Service worker registered for scope: " + reg.scope);
         });
       }

@@ -4,13 +4,13 @@
   "theme_color": "#56ff56",
   "background_color": "#56ff56",
   "display": "standalone",
-  "scope": "/",
-  "start_url": "/",
+  "scope": "./",
+  "start_url": "./",
   "description": "Memes, Fails & Tweets",
   "orientation": "any",
   "icons": [
     {
-      "src": "/icon.png",
+      "src": "./icon.png",
       "sizes": "512x512"
     }
   ]
