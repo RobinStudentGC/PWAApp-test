@@ -1,17 +1,21 @@
 {
-  "name": "Meme App",
-  "short_name": "Memes",
-  "theme_color": "#56ff56",
-  "background_color": "#56ff56",
-  "display": "standalone",
-  "scope": "./",
-  "start_url": "./",
-  "description": "Memes, Fails & Tweets",
-  "orientation": "any",
-  "icons": [
-    {
-      "src": "./icon.png",
-      "sizes": "512x512"
-    }
-  ]
+    "theme_color": "#56ff56",
+    "background_color": "#56ff56",
+    "icons": [
+        {
+            "src": "icons/favicon.ico",
+            "sizes": "any",
+            "type": "image/x-icon",
+            "purpose": "any"
+        }
+    ],
+    "orientation": "any",
+    "display": "standalone",
+    "dir": "auto",
+    "lang": "en-US",
+    "name": "Meme App",
+    "short_name": "memeapp",
+    "start_url": "./",
+    "scope": "./",
+    "description": "My awesome app"
 }

@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="nl">
   <head>
-    <!-- Base URL for subdirectory -->
-    <base href="/PWAApp-test/" />
     <!-- Vereiste meta tags -->
     <link rel="manifest" href="./manifest.json" />
+    <!-- Favicon links -->
+    <link rel="icon" href="icons/favicon.ico" />
     <meta name="theme-color" content="#56ff56" />
+    <meta name="description" content="My Awesome App" />
+    <meta name="msapplication-TileColor" content="#56ff56" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Home</title>
@@ -41,10 +43,12 @@
       }
 
       .sheet {
-        position: absolute;
+        position: fixed;
         z-index: 100;
         top: 0;
+        left: 0;
         width: 100vw;
+        height: 100vh;
         margin-left: 0;
         background-color: #2e2e2e;
         transition: 0.3s ease;
@@ -107,11 +111,6 @@
       const MDCTextField = mdc.textField.MDCTextField;
       const MDCTooltip = mdc.tooltip.MDCTooltip;
       const MDCTopAppBar = mdc.topAppBar.MDCTopAppBar;
-      if ("serviceWorker" in navigator && !navigator.serviceWorker.controller) {
-        navigator.serviceWorker.register("./sw.js").then(function (reg) {
-          console.log("Service worker registered for scope: " + reg.scope);
-        });
-      }
     </script>
   </head>
 
@@ -353,6 +352,21 @@
       </footer>
     </section>
 
+    <!-- Install Prompt Snackbar -->
+    <div class="mdc-snackbar" id="installSnackbar">
+      <div class="mdc-snackbar__surface">
+        <div class="mdc-snackbar__label" role="status" aria-live="polite">
+          Install this app for quick access!
+        </div>
+        <div class="mdc-snackbar__actions">
+          <button class="mdc-button mdc-snackbar__action" id="installButton" style="color: var(--mdc-theme-primary);">
+            <span class="mdc-button__label">Install</span>
+          </button>
+          <button class="mdc-icon-button mdc-snackbar__dismiss material-icons" title="Dismiss">close</button>
+        </div>
+      </div>
+    </div>
+
     <!-- images -->
     <ul
       class="mdc-image-list mdc-image-list--masonry my-masonry-image-list"
@@ -515,6 +529,65 @@
           buildHtml("");
           tabBar.activateTab(null);
         });
+
+      // Handle beforeinstallprompt event for PWA installation
+      let deferredPrompt;
+      const installSnackbar = new MDCSnackbar(
+        document.getElementById("installSnackbar")
+      );
+      const installButton = document.getElementById("installButton");
+
+      window.addEventListener("beforeinstallprompt", (e) => {
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault();
+        // Stash the event for later use
+        deferredPrompt = e;
+        console.log("beforeinstallprompt event captured");
+
+        // Show the install snackbar after 3 seconds
+        setTimeout(() => {
+          installSnackbar.open();
+        }, 3000);
+      });
+
+      installButton.addEventListener("click", async () => {
+        if (!deferredPrompt) {
+          return;
+        }
+
+        // Show the install prompt
+        deferredPrompt.prompt();
+
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response to the install prompt: ${outcome}`);
+
+        // Clear the deferredPrompt
+        deferredPrompt = null;
+
+        // Close the snackbar
+        installSnackbar.close();
+      });
+
+      // Handle app installed event
+      window.addEventListener("appinstalled", () => {
+        console.log("PWA app installed successfully");
+        // Optionally close the snackbar or show a success message
+        installSnackbar.close();
+      });
+
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/service-worker.js")
+            .then((reg) =>
+              console.log("Service worker registered with scope:", reg.scope),
+            )
+            .catch((err) =>
+              console.error("Service worker registration failed:", err),
+            );
+        });
+      }
     </script>
   </body>
 </html>
